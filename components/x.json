@@ -1,0 +1,46 @@
+{
+  "name": "preferred_characters",
+  "ruleLanguageVersion": "1.0",
+
+  "playerAttributes": [
+    {
+      "name": "myCharacter",
+      "type": "string_list"
+    },
+    {
+      "name": "preferredOpponents",
+      "type": "string_list"
+    }
+  ],
+
+  "teams": [
+    {
+      "name": "red",
+      "minPlayers": 5,
+      "maxPlayers": 5
+    }
+  ],
+
+  "rules": [
+    {
+      "description": "Make sure that all players in the match are using a character that is on all other players' preferred opponents list.",
+      "name": "OpponentMatch",
+      "type": "collection",
+      "operation": "reference_intersection_count",
+      "measurements": ["flatten(teams[*].players.attributes[myCharacter])"],
+      "referenceValue": "set_intersection(flatten(teams[*].players.attributes[preferredOpponents]))",
+      "minCount": 1
+    }
+  ],
+  "expansions": [
+    {
+      "target": "rules[OpponentMatch].minCount",
+      "steps": [
+        {
+          "waitTimeSeconds": 15,
+          "value": 0
+        }
+      ]
+    }
+  ]
+}
