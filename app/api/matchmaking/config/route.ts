@@ -3,8 +3,8 @@ import * as AWS from "aws-sdk";
 AWS.config.update({
   region: "us-east-1",
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
+    accessKeyId: process.env.AWS_GAMELIFT_ACCESS_KEY!,
+    secretAccessKey: process.env.AWS_GAMELIFT_SECRET_KEY!,
   },
 });
 
