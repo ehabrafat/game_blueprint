@@ -1,16 +1,22 @@
 "use client";
 
-import { useConversationId, useMessagesInf, useProfile } from "@/queries/hooks";
+import {
+  useConversationId,
+  useMatchedPlayers,
+  useMessagesInf,
+  useProfile,
+} from "@/queries/hooks";
 import { getProfileBy } from "@/queries/services";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
-import { EventPayload, RealtimeEvent, useEventStore } from "./useEventStore";
+import { RealtimeEvent, useEventStore } from "./useEventStore";
 import { useScrollAction } from "./useScrollAction";
 import { UserState } from "@/types";
 import { useOnlineUsers } from "./useOnlineUsers";
+import { Database } from "@/types/database.types";
 
-const supabase = createClientComponentClient();
+const supabase = createClientComponentClient<Database>();
 
 export const useRealTime = () => {
   const { mutate } = useSWRConfig();
@@ -21,6 +27,8 @@ export const useRealTime = () => {
   const { data: conversationId } = useConversationId(
     profile?.current_team ?? null
   );
+
+  const { data: matchedPLayers } = useMatchedPlayers();
 
   const { setEvent, setPayload } = useEventStore();
 
@@ -66,8 +74,34 @@ export const useRealTime = () => {
     myChannel
       .on(
         "broadcast",
+        { event: "MatchmakingSucceeded" as RealtimeEvent },
+        async ({ payload }) => {
+          console.log("got team matching event", payload);
+
+          const players = payload.players;
+          for (const player of players) {
+            const playerId = player.playerId;
+            const { data: team } = await supabase
+              .from("profiles")
+              .select("current_team")
+              .eq("id", playerId)
+              .single();
+
+            if (!team) throw new Error("team not found");
+            await supabase
+              .from("teams")
+              .update({
+                match_id: payload.matchId,
+              })
+              .eq("id", team.current_team);
+            mutate("matched_players");
+          }
+        }
+      )
+      .on(
+        "broadcast",
         { event: "team_invite" as RealtimeEvent },
-        ({ payload }: { payload: EventPayload }) => {
+        ({ payload }) => {
           setEvent("team_invite");
           setPayload(payload);
         }
@@ -75,7 +109,7 @@ export const useRealTime = () => {
       .on(
         "broadcast",
         { event: "team_join" as RealtimeEvent },
-        ({ payload }: { payload: EventPayload }) => {
+        ({ payload }) => {
           setEvent("team_join");
           setPayload(payload);
         }
@@ -170,7 +204,7 @@ export const useRealTime = () => {
     channelsNames,
   }: {
     event: RealtimeEvent;
-    payload?: EventPayload;
+    payload?: any;
     channelsNames: string[];
   }) => {
     for (const channelName of channelsNames) {

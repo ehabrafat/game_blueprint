@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import {
   fetchFriends,
+  fetchMatchedPlayers,
   fetchMessages,
   fetchProfile,
   fetchProfilesLike,
@@ -71,5 +72,12 @@ export const useGetProfilesLike = () => {
     async (url, { arg }: { arg: { usernamePrefix: string } }) => {
       return await fetchProfilesLike(arg.usernamePrefix, profile!.id);
     }
+  );
+};
+
+export const useMatchedPlayers = () => {
+  const { data: profile } = useProfile();
+  return useSWR(profile ? "matched_players" : null, () =>
+    fetchMatchedPlayers(profile?.current_team!)
   );
 };

@@ -6,22 +6,19 @@ export type RealtimeEvent =
   | "team_join"
   | "team_update"
   | "friends_update"
+  | MatchmakingEventType
   | "";
 
 
-export interface EventPayload {
-  sender: UserProfile;
-}
-
 interface EventStore {
   event: RealtimeEvent;
-  payload?: EventPayload;
+  payload?: any;
   setEvent: (event: RealtimeEvent) => void;
-  setPayload: (payload: EventPayload) => void;
+  setPayload: (payload: any) => void;
 }
 
 export const useEventStore = create<EventStore>((set) => ({
   event: "",
   setEvent: (event: RealtimeEvent) => set({ event: event }),
-  setPayload: (payload: EventPayload) => set({ payload: payload }),
+  setPayload: (payload: any) => set({ payload: payload }),
 }));

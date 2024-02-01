@@ -271,3 +271,29 @@ export const fetchProfilesLike = async (
   if (error) console.error(error);
   return data;
 };
+
+export const fetchMatchedPlayers = async (teamId: string) => {
+  const { data: match } = await supabase
+    .from("teams")
+    .select("match_id")
+    .eq("id", teamId)
+    .single();
+  if (!match?.match_id) return [];
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("id")
+    .eq("match_id", match.match_id);
+  if (!teams) return [];
+  const players: (UserProfile & { player_session_id: string | null })[] = [];
+  for (const team of teams) {
+    const { data: teamPlayers } = await supabase
+      .from("profiles")
+      .select(
+        "id, username, current_team, default_team, img_url, player_session_id"
+      )
+      .eq("current_team", team.id);
+    if (!teamPlayers) continue;
+    players.push(...teamPlayers);
+  }
+  return players;
+};
