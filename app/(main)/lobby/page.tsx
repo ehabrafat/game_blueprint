@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Chat } from "@/components/Chat";
 import { Playground } from "@/components/Playground";
 import { SidebarTabs } from "@/components/SidebarTabs";
+import { Nav } from "@/components/Nav";
 
 const Lobby = async () => {
   const user = await currentUser();
@@ -11,11 +12,14 @@ const Lobby = async () => {
   // const profile = await currentProfile(user.id);
   // if (!profile) return <ProfileForm />;
   return (
-    <div className="grid grid-cols-4 gap-4">
-      <SidebarTabs />
-      <Playground />
-      <Chat />
-    </div>
+    <>
+      <Nav />
+      <div className="grid grid-cols-4 gap-4">
+        <SidebarTabs />
+        <Playground />
+        <Chat />
+      </div>
+    </>
   );
 };
 

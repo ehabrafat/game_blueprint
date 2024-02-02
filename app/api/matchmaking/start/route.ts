@@ -1,6 +1,5 @@
+import { CONFIGRATION_NAME, gameLift } from "@/lib/aws";
 import { NextResponse } from "next/server";
-import { CONFIGRATION_NAME, gameLift } from "../config/route";
-
 
 export async function POST(req: Request) {
   const { players, ticketId } = await req.json();
@@ -12,8 +11,8 @@ export async function POST(req: Request) {
       Players: players,
     },
     (error, result) => {
-      if (error) return NextResponse.json({ error: error.message });
-      return NextResponse.json(result);
+      if (error) console.error(error);
+      return console.log(result);
     }
   );
   return NextResponse.json("ok", { status: 200 });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { gameLift } from "../config/route";
+import { CONFIGRATION_NAME, gameLift } from "@/lib/aws";
 
 export async function POST(req: Request) {
   const { ticketId } = await req.json();
