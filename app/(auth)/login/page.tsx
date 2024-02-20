@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/forms/LoginForm";
-import { currentUser } from "@/lib/currentUser";
+import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 export default async function Login() {
