@@ -12,17 +12,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { ProfileSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  SupabaseClient,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Skeleton } from "../ui/skeleton";
 import { FormError } from "./FormError";
+import { supabaseClient } from "@/utils/supabase/client";
+import { useAuth } from "@clerk/nextjs";
 
 export const ProfileForm = () => {
+  const { userId, getToken } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
   const [loadingAvatar, setLoadingAvatar] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
@@ -41,11 +47,14 @@ export const ProfileForm = () => {
       setImgUrl("");
       return;
     }
-    const supabase = createClientComponentClient();
     setLoadingAvatar(true);
+    const supabaseAccessToken = await getToken({ template: "supabase" });
+
+    const supabase = await supabaseClient(supabaseAccessToken!);
     const { error, data } = await supabase.storage
       .from("avatars")
       .upload(`avatar_${Date.now()}.png`, file);
+      
     if (error) {
       console.error(error);
       return;

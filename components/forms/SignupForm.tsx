@@ -22,8 +22,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormSuccess } from "./FormSuccess";
 import { FcGoogle } from "react-icons/fc";
+import { createBrowserClient } from "@supabase/ssr";
+import { createSupbaseClient } from "@/utils/supabase/client";
 
 export const SignupForm = () => {
+  const supabase = createSupbaseClient();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();

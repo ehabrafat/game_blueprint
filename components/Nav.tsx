@@ -1,8 +1,8 @@
 "use client";
 
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
-import { LogoutButton } from "./auth/LogoutButton";
 import { Searchbar } from "./Searchbar";
 
 export const Nav = () => {
@@ -16,7 +16,7 @@ export const Nav = () => {
       <Searchbar />
       <div className="flex items-center gap-x-4">
         <ModeToggle />
-        <LogoutButton />
+        <UserButton />
       </div>
     </nav>
   );

@@ -55,7 +55,12 @@ export const LoginForm = () => {
       }
     }
   }
-
+  const signWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    router.push("/lobby");
+  };
   return (
     <>
       <Card className="w-[420px]">
@@ -122,6 +127,7 @@ export const LoginForm = () => {
             size={"lg"}
             variant="secondary"
             className="w-full flex items-center justify-center gap-x-2"
+            onClick={signWithGoogle}
           >
             <FcGoogle className="w-5 h-5" />
             <span className="font-normal text-sm">Continue with Google</span>

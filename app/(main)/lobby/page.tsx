@@ -1,23 +1,20 @@
-import { currentUser } from "@/lib/currentUser";
 import { redirect } from "next/navigation";
 
 import { Chat } from "@/components/Chat";
 import { Playground } from "@/components/Playground";
 import { SidebarTabs } from "@/components/SidebarTabs";
 import { Nav } from "@/components/Nav";
+import { auth, currentUser } from "@clerk/nextjs";
+import { currentProfile } from "@/lib/currentProfile";
+import { ProfileForm } from "@/components/forms/ProfileForm";
 
 const Lobby = async () => {
-  const user = await currentUser();
-  if (!user) return redirect("/");
-  // const profile = await currentProfile(user.id);
-  // if (!profile) return <ProfileForm />;
   return (
     <>
       <Nav />
-      <div className="grid grid-cols-4 gap-4">
+      <div className="flex items-center gap-x-2">
         <SidebarTabs />
         <Playground />
-        <Chat />
       </div>
     </>
   );

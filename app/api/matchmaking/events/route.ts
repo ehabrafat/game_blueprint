@@ -16,6 +16,7 @@ export async function POST(req: Request) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   if (event.detail.type === "MatchmakingSucceeded") {
+    // send to database & client listen to it
     const players = event.detail.gameSessionInfo.players;
     const matchId = event.detail.matchId;
     const type = event.detail.type;

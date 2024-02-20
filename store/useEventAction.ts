@@ -43,7 +43,6 @@ export const useEventAction = () => {
       if (!joined) return;
       syncMe();
       console.log("notify ", [...teamMembers, sender]);
-
       emitTeamUpdate([...teamMembers, sender]);
     } catch (error) {
       console.error(error);

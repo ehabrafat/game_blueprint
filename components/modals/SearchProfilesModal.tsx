@@ -1,6 +1,15 @@
 "use client";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import {
   useFriends,
   useGetProfilesLike,
   useProfile,
@@ -13,26 +22,14 @@ import {
 } from "@/queries/services";
 import { useModalStore } from "@/store/useModalStore";
 import { UserProfile } from "@/types";
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import { ChangeEvent, useEffect } from "react";
-import { FaUserFriends } from "react-icons/fa";
-import { IoIosSend } from "react-icons/io";
+import { IoChevronDown } from "react-icons/io5";
 import { MdPersonAdd } from "react-icons/md";
-import { toast } from "sonner";
 import { useSWRConfig } from "swr";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { IoChevronDown } from "react-icons/io5";
 
 export const SearchProfilesModal = () => {
   const { mutate } = useSWRConfig();
@@ -79,8 +76,6 @@ export const SearchProfilesModal = () => {
     senderId: string,
     receiverId: string
   ) => {
-    console.log("deleteing f request ", senderId, receiverId);
-
     await deleteFriendRequest(senderId, receiverId);
     mutate("sent_friend_requests");
   };
